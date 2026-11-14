@@ -1,5 +1,5 @@
-<!-- VERSION: market-1.0 -->
-<!-- PLDN-FAYL: pldn-bozor/index.html | versiya: market-1.0 | satr: 920 | 14-noy-2026 -->
+<!-- VERSION: market-1.1 -->
+<!-- PLDN-FAYL: pldn-bozor/index.html | versiya: market-1.1 | satr: 928 | 14-noy-2026 -->
 <!DOCTYPE html>
 <html lang="uz">
 <head>
@@ -51,7 +51,7 @@ input, textarea, select { font-family: inherit; font-size: 14px; }
 .input:focus { outline: none; border-color: var(--primary); background: #fff; }
 .input[readonly] { opacity: .7; }
 textarea.input { resize: vertical; min-height: 80px; font-family: inherit; }
-.search-bar { background: var(--card); padding: 12px 16px; position: sticky; top: 61px; z-index: 99; border-bottom: 1px solid var(--border); }
+.search-bar { background: var(--card); padding: 12px 16px; position: sticky; top: var(--hh, 61px); z-index: 99; border-bottom: 1px solid var(--border); }
 .search-input { width: 100%; padding: 10px 14px 10px 40px; background: var(--bg); border: none; border-radius: 24px; font-size: 14px; color: var(--text);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: 12px center; }
@@ -62,7 +62,7 @@ textarea.input { resize: vertical; min-height: 80px; font-family: inherit; }
 .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 .section-title { font-size: 16px; font-weight: 700; padding: 16px 16px 12px; }
 .func-card { background: var(--card); border-radius: var(--radius-lg); padding: 14px; display: flex; gap: 12px; margin: 0 16px 10px; box-shadow: var(--shadow); align-items: center; }
-.func-icon { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #2E7DFF, #00C48C); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+.func-icon { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #2E7DFF, #00C48C); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; overflow: hidden; line-height: 1; }
 .func-info { flex: 1; min-width: 0; }
 .func-name { font-weight: 700; font-size: 15px; margin-bottom: 2px; overflow-wrap: anywhere; }
 .func-meta { font-size: 12px; color: var(--text-2); overflow-wrap: anywhere; }
@@ -477,6 +477,12 @@ function applyLang() {
 /* ========== YORDAMCHILAR ========== */
 var $ = function (id) { return document.getElementById(id); };
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function iconOf(s) {
+  s = String(s == null ? '' : s).trim(); if (!s) return '🧩';
+  try { if (window.Intl && Intl.Segmenter) { var it = new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(s)[Symbol.iterator]().next(); return it.value ? it.value.segment : '🧩'; } } catch (_) {}
+  return Array.from(s)[0] || '🧩';
+}
+function syncHeader() { var h = document.getElementById('app-header'); if (h && h.offsetHeight) document.documentElement.style.setProperty('--hh', h.offsetHeight + 'px'); }
 function pad(n) { return (n < 10 ? '0' : '') + n; }
 function fmtDate(ts) { if (!ts) return ''; var d = new Date(Number(ts)); return pad(d.getDate()) + '.' + pad(d.getMonth() + 1) + '.' + d.getFullYear(); }
 function fmtN(n) { n = Number(n) || 0; return n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + 'K' : String(n); }
@@ -554,7 +560,7 @@ else fbAuth.onAuthStateChanged(function (user) {
     $('screen-login').classList.remove('active'); $('app').classList.remove('hidden');
     var un = (user.email || '').replace('@pldn.app', '');
     $('profile-username').value = un; loadProfile();
-    showState('loading'); loadAll();
+    showState('loading'); loadAll(); setTimeout(syncHeader, 100);
   } else {
     hideState(); $('app').classList.add('hidden'); $('screen-login').classList.add('active');
     S.lib = []; S.inst = {}; S.mine = [];
@@ -571,7 +577,7 @@ function navigate(screen, push) {
   var tg = $('screen-' + screen); if (tg) tg.classList.add('active');
   document.querySelectorAll('.nav-item').forEach(function (n) { n.classList.toggle('active', n.getAttribute('data-screen') === screen); });
   if (push !== false && cur !== screen) history_.push(screen);
-  cur = screen; setTitle();
+  cur = screen; setTitle(); syncHeader();
   $('back-btn').classList.toggle('hidden', MAIN.indexOf(screen) >= 0);
   if (screen === 'profile') loadProfile();
   if (screen === 'create' && !S.editFid) restoreDraft();
@@ -594,7 +600,7 @@ function instBtn(f) {
 }
 function metaOf(f) { return esc(f.author || f.team) + ' · v' + esc(f.ver) + ' · ' + fmtN(f.installs) + ' ' + esc(t('installs')); }
 function cardHtml(f) {
-  return '<div class="func-card" data-act="open" data-id="' + Number(f.id) + '"><div class="func-icon">' + esc(f.icon) + '</div><div class="func-info"><div class="func-name">' + esc(f.name) + '</div><div class="func-meta">' + metaOf(f) + '</div></div>' + instBtn(f) + '</div>';
+  return '<div class="func-card" data-act="open" data-id="' + Number(f.id) + '"><div class="func-icon">' + esc(iconOf(f.icon)) + '</div><div class="func-info"><div class="func-name">' + esc(f.name) + '</div><div class="func-meta">' + metaOf(f) + '</div></div>' + instBtn(f) + '</div>';
 }
 function renderCatalog() {
   var q = $('search').value.trim().toLowerCase();
@@ -605,7 +611,7 @@ function renderCatalog() {
   var shown;
   if (sections) {
     $('popular-scroll').innerHTML = list.slice().sort(byI).slice(0, 6).map(function (f) {
-      return '<div class="h-card" data-act="open" data-id="' + Number(f.id) + '"><div class="func-icon">' + esc(f.icon) + '</div><div class="func-name">' + esc(f.name) + '</div><div class="func-meta">' + esc(f.author || f.team) + ' · v' + esc(f.ver) + '</div>' + instBtn(f).replace('btn-sm', 'btn-sm" style="width:100%;') + '</div>';
+      return '<div class="h-card" data-act="open" data-id="' + Number(f.id) + '"><div class="func-icon">' + esc(iconOf(f.icon)) + '</div><div class="func-name">' + esc(f.name) + '</div><div class="func-meta">' + esc(f.author || f.team) + ' · v' + esc(f.ver) + '</div>' + instBtn(f).replace('btn-sm', 'btn-sm" style="width:100%;') + '</div>';
     }).join('');
     shown = list.slice().sort(byU); $('new-title').textContent = t('new_funcs');
   } else {
@@ -626,7 +632,7 @@ async function openDetail(id) {
 }
 function renderDetail() {
   var f = S.cur; if (!f) return;
-  $('detail-icon').textContent = f.icon || '🧩'; $('detail-name').textContent = f.name;
+  $('detail-icon').textContent = iconOf(f.icon); $('detail-name').textContent = f.name;
   $('detail-author').textContent = f.author || f.team;
   $('detail-stats').innerHTML = '<span>v' + esc(f.ver || '') + '</span><span>·</span><span>' + fmtN(f.installs) + ' ' + esc(t('installs')) + '</span>' + (f.updated ? '<span>·</span><span>' + fmtDate(f.updated) + '</span>' : '');
   var st = stateOf(f.id), a = '';
@@ -671,7 +677,7 @@ function renderMyFuncs() {
   $('myfuncs-empty').classList.toggle('hidden', arr.length > 0);
   $('myfuncs-list').innerHTML = arr.map(function (f) {
     var meta = f.gone ? t('gone') : (f.update ? t('update_avail') + ': v' + f.latest : t('my_installed')) + ' · v' + f.ver;
-    return '<div class="my-func"><div style="position:relative;"><div class="func-icon">' + esc(f.icon) + '</div>' + (f.update ? '<div class="update-badge">1</div>' : '') + '</div>' +
+    return '<div class="my-func"><div style="position:relative;"><div class="func-icon">' + esc(iconOf(f.icon)) + '</div>' + (f.update ? '<div class="update-badge">1</div>' : '') + '</div>' +
       '<div class="my-func-info"' + (f.gone ? '' : ' data-act="open" data-id="' + Number(f.id) + '"') + '><div class="func-name">' + esc(f.name) + '</div><div class="func-meta">' + esc(meta) + '</div></div>' +
       '<div class="my-func-btns">' + (f.update ? '<button class="btn btn-primary btn-sm" data-act="install" data-id="' + Number(f.id) + '">' + esc(t('update')) + '</button>' : '') +
       '<button class="btn btn-outline btn-sm" style="color:var(--danger);border-color:var(--danger)" data-act="uninstall" data-id="' + Number(f.id) + '">' + esc(t('uninstall')) + '</button></div></div>';
@@ -693,7 +699,7 @@ function restoreDraft() {
   } catch (_) {}
 }
 function updateCreateInfo() {
-  $('cr-icon-preview').textContent = $('cr-icon').value || '🧩';
+  $('cr-icon-preview').textContent = iconOf($('cr-icon').value);
   var code = $('cr-code').value, tg = detectTargets(code), sl = slotsOf(code), s = '';
   if (tg.length) s += t('targets_label') + tg.join(', ');
   if (sl.length) s += (s ? '\n' : '') + t('slots_label') + sl.map(function (x) { return '@' + x; }).join(', ');
@@ -794,7 +800,7 @@ async function submitFn() {
   if (!f.desc.trim()) { showToast(errMsg({ code: 'bad_desc' })); return; }
   var hash = await sha256hex(code);
   if (!S.test || !S.test.ok || S.test.hash !== hash) { setTestInfo('bad', t('test_need')); showToast(t('test_need')); return; }
-  var body = { ver: f.ver.trim(), desc: f.desc, code: code, icon: (f.icon || '🧩').trim(), vis: f.vis, place: f.place, targets: detectTargets(code), test: { ok: true, ms: S.test.ms, errors: S.test.errors, hash: hash } };
+  var body = { ver: f.ver.trim(), desc: f.desc, code: code, icon: iconOf(f.icon), vis: f.vis, place: f.place, targets: detectTargets(code), test: { ok: true, ms: S.test.ms, errors: S.test.errors, hash: hash } };
   if (S.editFid) body.fid = S.editFid; else { body.team = f.team.trim(); body.name = f.name.replace(/\s+/g, ' ').trim(); }
   var btn = $('cr-send'); btn.disabled = true;
   try {
@@ -822,7 +828,7 @@ function renderMyCreated() {
   $('mycreated-empty').classList.toggle('hidden', myItems().length > 0);
   $('mycreated-list').innerHTML = items.map(function (x) {
     var f = x.f, v = x.v, s = v.status, cls = s === 'approved' ? 'approved' : (s === 'pending' ? 'pending' : 'rejected');
-    var h = '<div class="func-card" style="flex-direction: column; align-items: stretch;"><div style="display:flex; gap:12px; align-items:center;"><div class="func-icon">' + esc(f.icon) + '</div><div style="flex:1; min-width:0;"><div class="func-name">' + esc(f.name) + '</div><div class="func-meta">v' + esc(v.ver) + ' · ' + fmtDate(v.submitted) + ' ' + esc(t('sent_on')) + '</div></div><span class="status ' + cls + '"><span class="status-dot"></span>' + esc(t(s)) + '</span></div>';
+    var h = '<div class="func-card" style="flex-direction: column; align-items: stretch;"><div style="display:flex; gap:12px; align-items:center;"><div class="func-icon">' + esc(iconOf(f.icon)) + '</div><div style="flex:1; min-width:0;"><div class="func-name">' + esc(f.name) + '</div><div class="func-meta">v' + esc(v.ver) + ' · ' + fmtDate(v.submitted) + ' ' + esc(t('sent_on')) + '</div></div><span class="status ' + cls + '"><span class="status-dot"></span>' + esc(t(s)) + '</span></div>';
     if ((s === 'rejected' || s === 'returned') && v.reason) h += '<div class="reason"><strong style="color: var(--danger);">' + esc(t('reject_reason')) + ':</strong> ' + esc(v.reason) + '</div>';
     h += '<div class="row-btns">';
     var d = 'data-fid="' + Number(f.id) + '" data-ver="' + esc(v.ver) + '"';
@@ -909,12 +915,14 @@ $('login-pass').addEventListener('keydown', function (e) { if (e.key === 'Enter'
 $('search').addEventListener('input', renderCatalog);
 $('avatar-input').addEventListener('change', handleAvatar);
 ['cr-icon', 'cr-team', 'cr-name', 'cr-ver', 'cr-desc', 'cr-code'].forEach(function (id) {
-  $(id).addEventListener('input', function () { if (id === 'cr-code') { S.test = null; $('cr-testinfo').classList.add('hidden'); } updateCreateInfo(); saveDraft(); });
+  $(id).addEventListener('input', function () { if (id === 'cr-icon' && $(id).value) { var one = iconOf($(id).value); if ($(id).value !== one) $(id).value = one; } if (id === 'cr-code') { S.test = null; $('cr-testinfo').classList.add('hidden'); } updateCreateInfo(); saveDraft(); });
 });
+window.addEventListener('resize', syncHeader);
 window.addEventListener('online', function () { if (S.user && $('state-offline').classList.contains('active')) { showState('loading'); loadAll(); } });
 
 /* ========== BOSHLASH ========== */
 applyLang();
+setTimeout(syncHeader, 50); setTimeout(syncHeader, 600);
 </script>
 </body>
 </html>
