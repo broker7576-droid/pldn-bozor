@@ -1,0 +1,920 @@
+<!-- VERSION: market-1.0 -->
+<!-- PLDN-FAYL: pldn-bozor/index.html | versiya: market-1.0 | satr: 920 | 14-noy-2026 -->
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#2E7DFF">
+<title>PLDN Bozor</title>
+<style>
+:root {
+  --primary: #2E7DFF; --primary-dark: #1E5FD9; --success: #00C48C; --warning: #FFB020; --danger: #E53935;
+  --bg: #F7F9FC; --card: #FFFFFF; --text: #0F172A; --text-2: #64748B; --border: #E2E8F0;
+  --shadow: 0 2px 8px rgba(15, 23, 42, 0.06); --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.12);
+  --radius: 12px; --radius-lg: 16px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; overflow-x: hidden; min-height: 100vh; padding-bottom: 72px; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+input, textarea, select { font-family: inherit; font-size: 14px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: var(--radius); font-weight: 600; font-size: 14px; height: 48px; transition: all 0.2s; width: 100%; }
+.btn:disabled { opacity: .55; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:active { background: var(--primary-dark); transform: scale(0.98); }
+.btn-success { background: var(--success); color: #fff; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+.btn-ghost { background: rgba(46, 125, 255, 0.08); color: var(--primary); }
+.btn-sm { height: 36px; padding: 8px 14px; font-size: 13px; width: auto; }
+.card { background: var(--card); border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow); margin-bottom: 12px; }
+.header { background: var(--card); padding: 16px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.header h1 { font-size: 18px; font-weight: 700; flex: 1; }
+.header .back-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--bg); font-size: 18px; }
+.lang-switch { padding: 6px 10px; background: var(--bg); border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--primary); }
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0 calc(8px + env(safe-area-inset-bottom)); z-index: 100; }
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 12px; color: var(--text-2); font-size: 11px; font-weight: 500; transition: color 0.2s; }
+.nav-item.active { color: var(--primary); }
+.nav-item .nav-icon { font-size: 22px; }
+.screen { display: none; animation: fadeIn 0.3s; }
+.screen.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.login-screen { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 24px; background: linear-gradient(135deg, #2E7DFF 0%, #1E5FD9 100%); }
+.login-logo { width: 80px; height: 80px; background: #fff; border-radius: 24px; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: var(--shadow-lg); }
+.login-title { color: #fff; text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+.login-subtitle { color: rgba(255,255,255,0.8); text-align: center; margin-bottom: 32px; }
+.login-form { background: #fff; padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); }
+.input-group { margin-bottom: 16px; }
+.input-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-2); }
+.input-hint { font-size: 11px; color: var(--text-2); margin-top: 4px; }
+.input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius); background: var(--bg); transition: border-color 0.2s; font-size: 14px; color: var(--text); }
+.input:focus { outline: none; border-color: var(--primary); background: #fff; }
+.input[readonly] { opacity: .7; }
+textarea.input { resize: vertical; min-height: 80px; font-family: inherit; }
+.search-bar { background: var(--card); padding: 12px 16px; position: sticky; top: 61px; z-index: 99; border-bottom: 1px solid var(--border); }
+.search-input { width: 100%; padding: 10px 14px 10px 40px; background: var(--bg); border: none; border-radius: 24px; font-size: 14px; color: var(--text);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 12px center; }
+.search-input:focus { outline: none; }
+.chips { display: flex; gap: 8px; padding: 12px 16px; overflow-x: auto; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { padding: 8px 16px; background: var(--card); border-radius: 20px; font-size: 13px; font-weight: 500; white-space: nowrap; border: 1.5px solid var(--border); color: var(--text-2); }
+.chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.section-title { font-size: 16px; font-weight: 700; padding: 16px 16px 12px; }
+.func-card { background: var(--card); border-radius: var(--radius-lg); padding: 14px; display: flex; gap: 12px; margin: 0 16px 10px; box-shadow: var(--shadow); align-items: center; }
+.func-icon { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #2E7DFF, #00C48C); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+.func-info { flex: 1; min-width: 0; }
+.func-name { font-weight: 700; font-size: 15px; margin-bottom: 2px; overflow-wrap: anywhere; }
+.func-meta { font-size: 12px; color: var(--text-2); overflow-wrap: anywhere; }
+.h-scroll { display: flex; gap: 12px; padding: 0 16px 16px; overflow-x: auto; scrollbar-width: none; }
+.h-scroll::-webkit-scrollbar { display: none; }
+.h-card { flex-shrink: 0; width: 160px; background: var(--card); border-radius: var(--radius-lg); padding: 14px; box-shadow: var(--shadow); }
+.h-card .func-icon { width: 44px; height: 44px; font-size: 22px; margin-bottom: 10px; }
+.h-card .func-name { font-size: 14px; margin-bottom: 4px; }
+.h-card .func-meta { font-size: 11px; margin-bottom: 10px; }
+.detail-hero { background: var(--card); padding: 20px 16px; display: flex; gap: 14px; align-items: center; }
+.detail-hero .func-icon { width: 72px; height: 72px; font-size: 36px; border-radius: 18px; }
+.detail-hero .func-name { font-size: 20px; }
+.detail-hero .func-meta { font-size: 13px; }
+.detail-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; font-size: 12px; color: var(--text-2); }
+.detail-actions { padding: 0 16px 16px; background: var(--card); display: flex; flex-direction: column; gap: 10px; }
+.detail-section { background: var(--card); margin-top: 8px; padding: 16px; }
+.detail-section h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+.detail-section p { color: var(--text-2); font-size: 14px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.version-item { padding: 10px 0; border-bottom: 1px solid var(--border); }
+.version-item:last-child { border-bottom: none; }
+.version-head { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+.version-head strong { color: var(--text); }
+.version-head span { color: var(--text-2); }
+.version-changes { font-size: 12px; color: var(--text-2); white-space: pre-wrap; overflow-wrap: anywhere; }
+.tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { padding: 6px 12px; background: var(--bg); border-radius: 16px; font-size: 12px; font-weight: 500; color: var(--text); }
+.tag.green { background: rgba(0, 196, 140, 0.1); color: var(--success); }
+.tag.yellow { background: rgba(255, 176, 32, 0.1); color: var(--warning); }
+.tag.red { background: rgba(229, 57, 53, 0.1); color: var(--danger); }
+.my-func { background: var(--card); padding: 14px 16px; display: flex; gap: 12px; align-items: center; margin: 0 16px 10px; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+.my-func .func-icon { width: 44px; height: 44px; font-size: 22px; }
+.my-func-info { flex: 1; min-width: 0; }
+.my-func-btns { display: flex; flex-direction: column; gap: 6px; }
+.update-badge { position: absolute; top: -4px; right: -4px; width: 18px; height: 18px; background: var(--danger); color: #fff; border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.editor-code { background: #1E293B; color: #E2E8F0; padding: 14px; border-radius: var(--radius); font-family: 'Courier New', monospace; font-size: 13px; min-height: 200px; width: 100%; border: none; resize: vertical; line-height: 1.5; }
+.radio-group { display: flex; gap: 10px; }
+.radio { flex: 1; padding: 12px; border: 1.5px solid var(--border); border-radius: var(--radius); text-align: center; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+.radio.active { border-color: var(--primary); background: rgba(46,125,255,0.08); color: var(--primary); }
+.status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.status.pending { background: rgba(255,176,32,0.1); color: var(--warning); }
+.status.approved { background: rgba(0,196,140,0.1); color: var(--success); }
+.status.rejected { background: rgba(229,57,53,0.1); color: var(--danger); }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.empty { text-align: center; padding: 60px 24px; }
+.empty-icon { font-size: 64px; margin-bottom: 16px; opacity: 0.3; }
+.empty-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.empty-desc { font-size: 13px; color: var(--text-2); margin-bottom: 20px; }
+.state-overlay { position: fixed; inset: 0; background: var(--bg); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; padding: 24px; text-align: center; }
+.state-overlay.active { display: flex; }
+.spinner { width: 48px; height: 48px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.px-16 { padding-left: 16px; padding-right: 16px; }
+.mt-12 { margin-top: 12px; }
+.mb-12 { margin-bottom: 12px; }
+.hidden { display: none !important; }
+.profile-header { background: linear-gradient(135deg, #2E7DFF 0%, #1E5FD9 100%); padding: 24px 16px 60px; position: relative; text-align: center; }
+.profile-avatar-wrap { position: relative; width: 110px; height: 110px; margin: 0 auto 12px; }
+.profile-avatar { width: 110px; height: 110px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 48px; overflow: hidden; border: 4px solid #fff; box-shadow: var(--shadow-lg); }
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.avatar-edit-btn { position: absolute; bottom: 2px; right: 2px; width: 34px; height: 34px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: 3px solid #fff; }
+.profile-name-display { color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.profile-username-display { color: rgba(255,255,255,0.85); font-size: 14px; }
+.profile-form-card { background: var(--card); border-radius: var(--radius-lg); padding: 20px 16px; margin: -40px 16px 16px; box-shadow: var(--shadow-lg); position: relative; }
+.profile-form-card .input-group { margin-bottom: 14px; }
+.profile-stats { display: flex; justify-content: space-around; background: var(--card); margin: 0 16px 16px; border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow); }
+.stat-item { text-align: center; }
+.stat-value { font-size: 18px; font-weight: 700; color: var(--text); }
+.stat-label { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+.profile-actions { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--text); color: #fff; padding: 12px 20px; border-radius: 24px; font-size: 13px; font-weight: 500; box-shadow: var(--shadow-lg); opacity: 0; transition: all 0.3s; z-index: 5000; max-width: 90vw; text-align: center; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* yangi: kod bilan topish, test oynasi, kod belgisi */
+.code-find { display: flex; gap: 8px; padding: 12px 16px 0; }
+.code-find .input { font-family: monospace; }
+.code-box { font-family: monospace; font-size: 13px; background: var(--bg); border-radius: var(--radius); padding: 10px 12px; word-break: break-all; margin-bottom: 8px; }
+.test-info { font-size: 13px; padding: 10px 12px; border-radius: var(--radius); background: var(--bg); margin-bottom: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.test-info.ok { background: rgba(0,196,140,0.1); color: #00875f; }
+.test-info.bad { background: rgba(229,57,53,0.08); color: var(--danger); }
+.banner { background: rgba(46,125,255,0.08); color: var(--primary); border-radius: var(--radius); padding: 10px 12px; font-size: 13px; margin-bottom: 16px; }
+.skeleton { height: 76px; margin: 0 16px 10px; border-radius: var(--radius-lg); background: linear-gradient(90deg, #eef2f7 25%, #f7f9fc 50%, #eef2f7 75%); background-size: 200% 100%; animation: sk 1.2s infinite; }
+@keyframes sk { to { background-position: -200% 0; } }
+#testRun { position: fixed; inset: 0; z-index: 3000; background: #fff; display: flex; flex-direction: column; }
+#testRun .bar { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #1c1c1e; color: #fff; }
+#testRun .bar b { flex: 1; }
+#testRun iframe { flex: 1; border: 0; width: 100%; background: #fff; }
+.reason { margin-top: 12px; padding: 10px; background: rgba(229,57,53,0.08); border-radius: 8px; font-size: 13px; overflow-wrap: anywhere; }
+.row-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="screen-login" class="screen">
+  <div class="login-screen">
+    <div class="login-logo">🧩</div>
+    <h1 class="login-title">PLDN Bozor</h1>
+    <p class="login-subtitle" data-i18n="login_subtitle">PLDN akkauntingiz bilan kiring</p>
+    <div class="login-form">
+      <div class="input-group">
+        <label class="input-label" data-i18n="account_name">Akkaunt nomi</label>
+        <input type="text" class="input" placeholder="username" id="login-user" autocapitalize="none" autocomplete="username">
+      </div>
+      <div class="input-group">
+        <label class="input-label" data-i18n="password">Parol</label>
+        <input type="password" class="input" placeholder="••••••••" id="login-pass" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary" id="login-btn" data-i18n="login">KIRISH</button>
+      <div style="text-align:center; margin-top:16px;">
+        <button class="lang-switch" data-act="lang" id="lang-btn-login">RU 🇷🇺</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ILOVA ============ -->
+<div id="app" class="hidden">
+  <div class="header" id="app-header">
+    <button class="back-btn hidden" id="back-btn" data-act="back">←</button>
+    <h1 id="header-title">Katalog</h1>
+    <button class="lang-switch" data-act="lang" id="lang-btn">RU 🇷🇺</button>
+  </div>
+
+  <!-- KATALOG -->
+  <div id="screen-catalog" class="screen active">
+    <div class="search-bar"><input type="text" class="search-input" id="search" data-i18n-placeholder="search" placeholder="Qidirish..."></div>
+    <div class="chips" id="chips">
+      <button class="chip active" data-chip="all" data-i18n="all">Hammasi</button>
+      <button class="chip" data-chip="popular" data-i18n="popular">Ommabop</button>
+      <button class="chip" data-chip="new" data-i18n="new">Yangi</button>
+    </div>
+    <div class="code-find">
+      <input type="text" class="input" id="code-input" maxlength="30" autocapitalize="none" data-i18n-placeholder="enter_code" placeholder="30 harfli kod">
+      <button class="btn btn-ghost btn-sm" style="height:46px" data-act="findcode" data-i18n="find">Topish</button>
+    </div>
+    <div id="popular-sec">
+      <h2 class="section-title" data-i18n="popular_funcs">⚡ Ommabop funksiyalar</h2>
+      <div class="h-scroll" id="popular-scroll"></div>
+    </div>
+    <h2 class="section-title" id="new-title" data-i18n="new_funcs">🆕 Yangi qo'shilganlar</h2>
+    <div id="new-list"></div>
+    <div class="empty hidden" id="catalog-empty">
+      <div class="empty-icon">🧩</div>
+      <div class="empty-title" data-i18n="nothing_found">Hech narsa topilmadi</div>
+      <div class="empty-desc" data-i18n="nothing_found_desc">Boshqa so'z bilan qidirib ko'ring</div>
+    </div>
+  </div>
+
+  <!-- TAFSILOT -->
+  <div id="screen-detail" class="screen">
+    <div class="detail-hero">
+      <div class="func-icon" id="detail-icon">🧩</div>
+      <div style="flex:1; min-width:0;">
+        <div class="func-name" id="detail-name"></div>
+        <div class="func-meta" id="detail-author"></div>
+        <div class="detail-stats" id="detail-stats"></div>
+      </div>
+    </div>
+    <div class="detail-actions" id="detail-actions"></div>
+    <div class="detail-section"><h3 data-i18n="description">Tavsif</h3><p id="detail-desc"></p></div>
+    <div class="detail-section"><h3 data-i18n="versions">Versiyalar tarixi</h3><div id="detail-versions"></div></div>
+    <div class="detail-section"><h3 data-i18n="affects_parts">Tegadigan qismlar</h3><div class="tag-list" id="detail-parts"></div></div>
+    <div class="detail-section"><h3 data-i18n="permissions">Ruxsatlar</h3><div class="tag-list" id="detail-perms"></div></div>
+    <div class="detail-section"><h3 data-i18n="share_code">Funksiya kodi</h3>
+      <div class="code-box" id="detail-code"></div>
+      <button class="btn btn-outline btn-sm" data-act="copycode" data-i18n="copy">Nusxalash</button>
+    </div>
+  </div>
+
+  <!-- MENING FUNKSIYALARIM -->
+  <div id="screen-myfuncs" class="screen">
+    <div id="myfuncs-list"></div>
+    <div class="empty hidden" id="myfuncs-empty">
+      <div class="empty-icon">📭</div>
+      <div class="empty-title" data-i18n="no_installed">Hali o'rnatilmagan</div>
+      <div class="empty-desc" data-i18n="go_to_catalog_desc">Bozordan funksiyalarni o'rnating</div>
+      <button class="btn btn-primary" style="width:auto; display:inline-flex;" data-act="nav" data-screen="catalog" data-i18n="go_catalog">Bozorga o'tish</button>
+    </div>
+    <div class="px-16 mt-12"><div class="input-hint" data-i18n="enable_hint">Funksiyani yoqish, o'chirish va joylashni PLDN ilovasida qilasiz.</div></div>
+  </div>
+
+  <!-- YARATISH -->
+  <div id="screen-create" class="screen">
+    <div style="padding: 16px;">
+      <div class="banner hidden" id="cr-banner"></div>
+      <div style="text-align:center; margin-bottom: 20px;">
+        <div class="func-icon" id="cr-icon-preview" style="margin: 0 auto 10px; width: 64px; height: 64px; font-size: 28px;">🧩</div>
+        <input type="text" class="input" id="cr-icon" maxlength="8" value="🧩" style="width:120px; text-align:center;">
+        <div class="input-hint" data-i18n="icon_hint">Ikonka sifatida bitta emoji</div>
+      </div>
+      <div class="input-group" id="cr-g-team">
+        <label class="input-label" data-i18n="team_name">Jamoa / Muallif *</label>
+        <input type="text" class="input" id="cr-team" placeholder="Jamoa_nomi" autocapitalize="none">
+        <div class="input-hint" data-i18n="team_hint">5–21 belgi: harf, son, _ va -</div>
+      </div>
+      <div class="input-group" id="cr-g-name">
+        <label class="input-label" data-i18n="func_name">Funksiya nomi *</label>
+        <input type="text" class="input" id="cr-name" placeholder="Mening funksiyam">
+      </div>
+      <div class="input-group">
+        <label class="input-label" data-i18n="version">Versiya *</label>
+        <input type="text" class="input" id="cr-ver" value="1" autocapitalize="none">
+        <div class="input-hint" data-i18n="ver_hint">Faqat harf va son, 12 belgigacha (masalan 1 yoki v2)</div>
+      </div>
+      <div class="input-group">
+        <label class="input-label" data-i18n="description">Tavsif *</label>
+        <textarea class="input" id="cr-desc" data-i18n-placeholder="desc_ph" placeholder="Funksiya haqida qisqacha..."></textarea>
+      </div>
+      <div class="input-group">
+        <label class="input-label" data-i18n="visibility">Ko'rinish</label>
+        <div class="radio-group" id="cr-vis">
+          <div class="radio active" data-val="public" data-act="radio" data-i18n="public">🌍 Ommaviy</div>
+          <div class="radio" data-val="private" data-act="radio" data-i18n="private">🔒 Shaxsiy</div>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="input-label" data-i18n="place">PLDN da qayerda ko'rinsin</label>
+        <div class="radio-group" id="cr-place">
+          <div class="radio active" data-val="funcs" data-act="radio" data-i18n="place_funcs">Funksiyalar bo'limi</div>
+          <div class="radio" data-val="settings" data-act="radio" data-i18n="place_settings">Sozlamalar</div>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="input-label" data-i18n="code">Kod</label>
+        <textarea class="editor-code" id="cr-code" spellcheck="false" autocapitalize="none" placeholder="PLDN.toast('Salom!');"></textarea>
+        <div class="input-hint" id="cr-targets"></div>
+      </div>
+      <div class="test-info hidden" id="cr-testinfo"></div>
+      <button class="btn btn-ghost mb-12" id="cr-test" data-act="test">🧪 <span data-i18n="test_mode">TEST MODE</span></button>
+      <button class="btn btn-primary" id="cr-send" data-act="submit">📤 <span data-i18n="send_admin">ADMINGA YUBORISH</span></button>
+      <div class="input-hint mt-12" data-i18n="place_hint">Test Mode shu yerda kodning xatosiz ishlashini tekshiradi. Ilovaga joylash va ulanishni tanlash PLDN ichida bo'ladi.</div>
+    </div>
+  </div>
+
+  <!-- YARATGANLARIM -->
+  <div id="screen-mycreated" class="screen">
+    <div class="chips" id="my-chips">
+      <button class="chip active" data-mychip="all" data-i18n="all">Hammasi</button>
+      <button class="chip" data-mychip="pending" data-i18n="pending">Tekshiruvda</button>
+      <button class="chip" data-mychip="approved" data-i18n="approved">Tasdiqlangan</button>
+      <button class="chip" data-mychip="rejected" data-i18n="rejected">Rad etilgan</button>
+    </div>
+    <div id="mycreated-list"></div>
+    <div class="empty hidden" id="mycreated-empty">
+      <div class="empty-icon">🛠️</div>
+      <div class="empty-title" data-i18n="no_created">Hali funksiya yaratmagansiz</div>
+      <button class="btn btn-primary mt-12" style="width:auto; display:inline-flex;" data-act="nav" data-screen="create" data-i18n="create">Yaratish</button>
+    </div>
+  </div>
+
+  <!-- PROFIL -->
+  <div id="screen-profile" class="screen">
+    <div class="profile-header">
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar"><span id="avatar-placeholder">👤</span><img id="avatar-img" class="hidden" alt="avatar"></div>
+        <button class="avatar-edit-btn" data-act="avatar">📷</button>
+        <input type="file" id="avatar-input" accept="image/*" style="display:none;">
+      </div>
+      <div class="profile-name-display" id="profile-display-name">Foydalanuvchi</div>
+      <div class="profile-username-display" id="profile-display-username">@username</div>
+    </div>
+    <div class="profile-form-card">
+      <div class="input-group"><label class="input-label" data-i18n="first_name">Ism</label><input type="text" class="input" id="profile-firstname"></div>
+      <div class="input-group"><label class="input-label" data-i18n="last_name">Familiya</label><input type="text" class="input" id="profile-lastname"></div>
+      <div class="input-group"><label class="input-label" data-i18n="username">Username</label><input type="text" class="input" id="profile-username" readonly style="font-family: monospace;"></div>
+      <button class="btn btn-primary" data-act="saveprofile" data-i18n="save">SAQLASH</button>
+      <div class="input-hint mt-12" data-i18n="profile_local">Ism va rasm faqat shu telefonda saqlanadi.</div>
+    </div>
+    <div class="profile-stats">
+      <div class="stat-item"><div class="stat-value" id="stat-installed">0</div><div class="stat-label" data-i18n="installed_count">O'rnatilgan</div></div>
+      <div class="stat-item"><div class="stat-value" id="stat-created">0</div><div class="stat-label" data-i18n="created_count">Yaratilgan</div></div>
+      <div class="stat-item"><div class="stat-value" id="stat-updates">0</div><div class="stat-label" data-i18n="updates">Yangilanish</div></div>
+    </div>
+    <div class="profile-actions">
+      <button class="btn btn-outline" data-act="soon" data-i18n="notifications">🔔 Bildirishnomalar</button>
+      <button class="btn btn-outline" data-act="soon" data-i18n="settings">⚙️ Sozlamalar</button>
+      <button class="btn btn-outline" style="color: var(--danger); border-color: var(--danger);" data-act="logout" data-i18n="logout">🚪 Chiqish</button>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-item active" data-screen="catalog" data-act="nav"><span class="nav-icon">🏠</span><span data-i18n="catalog">Katalog</span></button>
+    <button class="nav-item" data-screen="myfuncs" data-act="nav"><span class="nav-icon">📦</span><span data-i18n="my_funcs">Mening</span></button>
+    <button class="nav-item" data-screen="create" data-act="nav"><span class="nav-icon" style="font-size: 28px;">➕</span><span data-i18n="create">Yaratish</span></button>
+    <button class="nav-item" data-screen="mycreated" data-act="nav"><span class="nav-icon">🛠️</span><span data-i18n="my_created">Yaratgan</span></button>
+    <button class="nav-item" data-screen="profile" data-act="nav"><span class="nav-icon">👤</span><span data-i18n="profile">Profil</span></button>
+  </div>
+</div>
+
+<!-- HOLAT OYNALARI -->
+<div class="state-overlay active" id="state-loading"><div class="spinner"></div><div data-i18n="loading">Yuklanmoqda...</div></div>
+<div class="state-overlay" id="state-offline">
+  <div style="font-size: 64px; margin-bottom: 16px;">📡</div>
+  <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;" data-i18n="no_internet">Internet yo'q</div>
+  <div style="color: var(--text-2); margin-bottom: 20px;" data-i18n="check_connection">Ulanishni tekshiring</div>
+  <button class="btn btn-primary" style="width: auto; padding: 0 24px;" data-act="retry" data-i18n="retry">Qayta urinish</button>
+</div>
+<div class="state-overlay" id="state-error">
+  <div style="font-size: 64px; margin-bottom: 16px;">⚠️</div>
+  <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;" data-i18n="error_occurred">Xato yuz berdi</div>
+  <div style="color: var(--text-2); margin-bottom: 20px;" id="err-text"></div>
+  <button class="btn btn-primary" style="width: auto; padding: 0 24px;" data-act="retry" data-i18n="retry">Qayta urinish</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script>
+/* ========== SOZLAMALAR ========== */
+var API_BASE = 'https://134-255-228-146.sslip.io/funcs';   // funcsrv.js (pm2: funcs, port 3011)
+var FIREBASE_CONFIG = { apiKey: "AIzaSyBBy_I5JXK-pMcM7sNx6Wc8GQygE5lKXac", authDomain: "pldn-35cd6.firebaseapp.com", projectId: "pldn-35cd6", appId: "1:659938247594:web:cc9c67c9c5b0dfb20321d3" };
+var RE_TEAM = /^[A-Za-z0-9_-]{5,21}$/, RE_VER = /^[A-Za-z0-9]{1,12}$/, RE_NAME = /^[\p{L}\p{N}][\p{L}\p{N} ]{1,39}$/u;
+
+/* ========== I18N ========== */
+var i18n = {
+  uz: {
+    login_subtitle: "PLDN akkauntingiz bilan kiring", account_name: "Akkaunt nomi", password: "Parol", login: "KIRISH",
+    catalog: "Katalog", search: "Qidirish...", all: "Hammasi", popular: "Ommabop", 'new': "Yangi",
+    popular_funcs: "⚡ Ommabop funksiyalar", new_funcs: "🆕 Yangi qo'shilganlar", results: "Natijalar",
+    install: "O'RNATISH", installed: "O'RNATILGAN ✓", uninstall: "O'chirish", update: "YANGILASH",
+    description: "Tavsif", versions: "Versiyalar tarixi", affects_parts: "Tegadigan qismlar", permissions: "Ruxsatlar",
+    installs: "o'rnatish", no_parts: "Ilovaning qismlariga tegmaydi", no_perms: "Maxsus ruxsat kerak emas",
+    my_funcs: "Mening", my_created: "Yaratgan", create: "Yaratish", detail: "Funksiya", profile: "Profil",
+    no_installed: "Hali o'rnatilmagan", go_to_catalog_desc: "Bozordan funksiyalarni o'rnating", go_catalog: "Bozorga o'tish",
+    enable_hint: "Funksiyani yoqish, o'chirish va joylashni PLDN ilovasida qilasiz.",
+    icon_hint: "Ikonka sifatida bitta emoji", team_hint: "5–21 belgi: harf, son, _ va -", ver_hint: "Faqat harf va son, 12 belgigacha (masalan 1 yoki v2)",
+    func_name: "Funksiya nomi *", team_name: "Jamoa / Muallif *", version: "Versiya *", desc_ph: "Funksiya haqida qisqacha...",
+    visibility: "Ko'rinish", public: "🌍 Ommaviy", private: "🔒 Shaxsiy", place: "PLDN da qayerda ko'rinsin",
+    place_funcs: "Funksiyalar bo'limi", place_settings: "Sozlamalar",
+    code: "Kod", test_mode: "TEST MODE", send_admin: "ADMINGA YUBORISH",
+    place_hint: "Test Mode shu yerda kodning xatosiz ishlashini tekshiradi. Ilovaga joylash va ulanishni tanlash PLDN ichida bo'ladi.",
+    pending: "Tekshiruvda", approved: "Tasdiqlangan", rejected: "Rad etilgan", returned: "Tuzatishga qaytarilgan",
+    loading: "Yuklanmoqda...", no_internet: "Internet yo'q", check_connection: "Ulanishni tekshiring", error_occurred: "Xato yuz berdi", retry: "Qayta urinish",
+    reject_reason: "Sabab", send_again: "Qayta yuborish", new_version: "Yangi versiya", withdraw: "Qaytarib olish", remove: "Bozordan olib tashlash",
+    sent_on: "yuborilgan", no_created: "Hali funksiya yaratmagansiz",
+    first_name: "Ism", last_name: "Familiya", username: "Username", save: "SAQLASH",
+    installed_count: "O'rnatilgan", created_count: "Yaratilgan", updates: "Yangilanish",
+    notifications: "🔔 Bildirishnomalar", settings: "⚙️ Sozlamalar", logout: "🚪 Chiqish",
+    soon: "Tez orada qo'shiladi", profile_saved: "Profil saqlandi ✓", profile_local: "Ism va rasm faqat shu telefonda saqlanadi.",
+    enter_code: "30 harfli kod", find: "Topish", share_code: "Funksiya kodi", copy: "Nusxalash", copied: "Nusxalandi ✓",
+    nothing_found: "Hech narsa topilmadi", nothing_found_desc: "Boshqa so'z bilan qidirib ko'ring",
+    login_bad: "Akkaunt nomi yoki parol xato", no_lib: "Kutubxona yuklanmadi. Internetni tekshirib, qayta urinib ko'ring", fill_fields: "Barcha maydonlarni to'ldiring",
+    installed_toast: "O'rnatildi. PLDN ni oching: funksiya ro'yxatda paydo bo'ladi", uninstalled_toast: "O'chirildi",
+    confirm_uninstall: "Funksiya o'chirilsinmi?", confirm_logout: "Akkauntdan chiqasizmi?", confirm_remove: "Funksiya bozordan olib tashlansinmi?", confirm_withdraw: "Bu versiya qaytarib olinsinmi?",
+    test_ok: "✓ Test o'tdi", test_need: "Avval Test Mode ni o'tkazing (kod o'zgargan bo'lsa qayta)", test_short: "Kamida 2 soniya ishlating", test_errors: "✗ Test xatolar bilan tugadi:",
+    test_title: "Test Mode", close: "Yopish", errors_label: "Xatolar", no_code: "Kod bo'sh", bad_code: "Kod noto'g'ri formatda: 30 ta kichik harf (a–l)",
+    new_ver_banner: "Yangi versiya: ", targets_label: "Tegadigan qismlar: ", slots_label: "Foydalanuvchi o'zi tanlaydigan joylar: ",
+    sent_ok: "Yuborildi. Admin tekshiradi ✓", gone: "Endi mavjud emas", update_avail: "Yangilanish bor", my_installed: "O'rnatilgan",
+    p_camera_mic: "📷 Kamera/mikrofon", p_location: "📍 Joylashuv", p_notifications: "🔔 Bildirishnomalar", p_clipboard: "📋 Clipboard", p_storage: "💾 Xotira"
+  },
+  ru: {
+    login_subtitle: "Войдите с аккаунтом PLDN", account_name: "Имя аккаунта", password: "Пароль", login: "ВОЙТИ",
+    catalog: "Каталог", search: "Поиск...", all: "Все", popular: "Популярные", 'new': "Новые",
+    popular_funcs: "⚡ Популярные функции", new_funcs: "🆕 Недавно добавленные", results: "Результаты",
+    install: "УСТАНОВИТЬ", installed: "УСТАНОВЛЕНО ✓", uninstall: "Удалить", update: "ОБНОВИТЬ",
+    description: "Описание", versions: "История версий", affects_parts: "Затрагиваемые части", permissions: "Разрешения",
+    installs: "установок", no_parts: "Не затрагивает части приложения", no_perms: "Особые разрешения не нужны",
+    my_funcs: "Мои", my_created: "Создано", create: "Создать", detail: "Функция", profile: "Профиль",
+    no_installed: "Пока ничего не установлено", go_to_catalog_desc: "Установите функции из магазина", go_catalog: "В магазин",
+    enable_hint: "Включать, выключать и размещать функции нужно в приложении PLDN.",
+    icon_hint: "Одна эмодзи в качестве иконки", team_hint: "5–21 символ: буквы, цифры, _ и -", ver_hint: "Только буквы и цифры, до 12 символов (например 1 или v2)",
+    func_name: "Название функции *", team_name: "Команда / Автор *", version: "Версия *", desc_ph: "Коротко о функции...",
+    visibility: "Видимость", public: "🌍 Публичный", private: "🔒 Личный", place: "Где показывать в PLDN",
+    place_funcs: "Раздел функций", place_settings: "Настройки",
+    code: "Код", test_mode: "ТЕСТ РЕЖИМ", send_admin: "ОТПРАВИТЬ АДМИНУ",
+    place_hint: "Тест Режим проверяет здесь, что код работает без ошибок. Размещение в приложении и выбор подключения происходят внутри PLDN.",
+    pending: "На проверке", approved: "Одобрено", rejected: "Отклонено", returned: "Возвращено на доработку",
+    loading: "Загрузка...", no_internet: "Нет интернета", check_connection: "Проверьте подключение", error_occurred: "Произошла ошибка", retry: "Повторить",
+    reject_reason: "Причина", send_again: "Отправить снова", new_version: "Новая версия", withdraw: "Отозвать", remove: "Убрать из магазина",
+    sent_on: "отправлено", no_created: "Вы пока не создавали функций",
+    first_name: "Имя", last_name: "Фамилия", username: "Username", save: "СОХРАНИТЬ",
+    installed_count: "Установлено", created_count: "Создано", updates: "Обновления",
+    notifications: "🔔 Уведомления", settings: "⚙️ Настройки", logout: "🚪 Выйти",
+    soon: "Скоро будет добавлено", profile_saved: "Профиль сохранён ✓", profile_local: "Имя и фото хранятся только на этом телефоне.",
+    enter_code: "Код из 30 букв", find: "Найти", share_code: "Код функции", copy: "Копировать", copied: "Скопировано ✓",
+    nothing_found: "Ничего не найдено", nothing_found_desc: "Попробуйте другой запрос",
+    login_bad: "Неверное имя аккаунта или пароль", no_lib: "Библиотека не загрузилась. Проверьте интернет и повторите", fill_fields: "Заполните все поля",
+    installed_toast: "Установлено. Откройте PLDN: функция появится в списке", uninstalled_toast: "Удалено",
+    confirm_uninstall: "Удалить функцию?", confirm_logout: "Выйти из аккаунта?", confirm_remove: "Убрать функцию из магазина?", confirm_withdraw: "Отозвать эту версию?",
+    test_ok: "✓ Тест пройден", test_need: "Сначала пройдите Тест Режим (если код менялся, повторите)", test_short: "Работайте минимум 2 секунды", test_errors: "✗ Тест завершился с ошибками:",
+    test_title: "Тест Режим", close: "Закрыть", errors_label: "Ошибки", no_code: "Код пуст", bad_code: "Неверный формат кода: 30 строчных букв (a–l)",
+    new_ver_banner: "Новая версия: ", targets_label: "Затрагиваемые части: ", slots_label: "Места, которые пользователь выберет сам: ",
+    sent_ok: "Отправлено. Админ проверит ✓", gone: "Больше недоступна", update_avail: "Есть обновление", my_installed: "Установлено",
+    p_camera_mic: "📷 Камера/микрофон", p_location: "📍 Геолокация", p_notifications: "🔔 Уведомления", p_clipboard: "📋 Буфер обмена", p_storage: "💾 Память"
+  }
+};
+var ERR = {
+  network: ['Internet bilan aloqa yo\'q', 'Нет связи с интернетом'], auth: ['Qayta kiring', 'Войдите заново'],
+  scan_block: ['Kodda taqiqlangan narsa bor', 'В коде есть запрещённое'], test_required: ['Avval Test Mode ni o\'tkazing', 'Сначала пройдите Тест Режим'],
+  bad_team: ['Jamoa nomi noto\'g\'ri (5–21 belgi)', 'Неверное имя команды (5–21)'], bad_name: ['Nom noto\'g\'ri (harf, son, 2–40)', 'Неверное название (буквы, цифры, 2–40)'],
+  bad_ver: ['Versiya noto\'g\'ri (harf va son)', 'Неверная версия (буквы и цифры)'], bad_desc: ['Tavsif bo\'sh yoki juda uzun', 'Описание пустое или слишком длинное'],
+  no_code: ['Kod bo\'sh', 'Код пуст'], team_taken: ['Bu jamoa nomi band', 'Это имя команды занято'], name_taken: ['Bu nom band', 'Это название занято'],
+  too_large: ['Fayl juda katta', 'Файл слишком большой'], rate_limit: ['Juda ko\'p urinish, keyinroq', 'Слишком много попыток, позже'],
+  too_many_pending: ['Tekshiruvda juda ko\'p funksiya bor', 'Слишком много функций на проверке'], not_found: ['Topilmadi', 'Не найдено'],
+  cannot: ['Bu amalni bajarib bo\'lmaydi', 'Действие недоступно'], bad_targets: ['Qismlar ro\'yxati noto\'g\'ri', 'Неверный список частей'],
+  bad_part: ['Bunday ilova qismi yo\'q', 'Такой части приложения нет'], part_closed: ['Bu qism yopiq', 'Эта часть закрыта'],
+  forbidden: ['Ruxsat yo\'q', 'Нет доступа'], server: ['Server xatosi', 'Ошибка сервера']
+};
+var lang = localStorage.getItem('pm_lang') === 'ru' ? 'ru' : 'uz';
+function t(k) { return (i18n[lang][k] != null ? i18n[lang][k] : k); }
+function errMsg(e) {
+  var m = e && ERR[e.code];
+  return (m ? m[lang === 'ru' ? 1 : 0] : t('error_occurred') + (e && e.code ? ' (' + e.code + ')' : '')) + (e && e.data && e.data.part ? ' (' + e.data.part + ')' : '');
+}
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(function (el) { var k = el.getAttribute('data-i18n'); if (i18n[lang][k] != null) el.textContent = i18n[lang][k]; });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function (el) { var k = el.getAttribute('data-i18n-placeholder'); if (i18n[lang][k] != null) el.placeholder = i18n[lang][k]; });
+  document.querySelectorAll('#lang-btn, #lang-btn-login').forEach(function (b) { b.textContent = lang === 'uz' ? 'RU 🇷🇺' : 'UZ 🇺🇿'; });
+  setTitle();
+}
+
+/* ========== YORDAMCHILAR ========== */
+var $ = function (id) { return document.getElementById(id); };
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function pad(n) { return (n < 10 ? '0' : '') + n; }
+function fmtDate(ts) { if (!ts) return ''; var d = new Date(Number(ts)); return pad(d.getDate()) + '.' + pad(d.getMonth() + 1) + '.' + d.getFullYear(); }
+function fmtN(n) { n = Number(n) || 0; return n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + 'K' : String(n); }
+var toastTm = null;
+function showToast(msg) { var el = $('toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(toastTm); toastTm = setTimeout(function () { el.classList.remove('show'); }, 2600); }
+function showState(type, msg) { document.querySelectorAll('.state-overlay').forEach(function (s) { s.classList.remove('active'); }); if (msg != null && $('err-text')) $('err-text').textContent = msg; $('state-' + type).classList.add('active'); }
+function hideState() { document.querySelectorAll('.state-overlay').forEach(function (s) { s.classList.remove('active'); }); }
+function copyText(s) {
+  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(s).then(function () { showToast(t('copied')); }, function () { fallbackCopy(s); }); } else fallbackCopy(s);
+}
+function fallbackCopy(s) { var ta = document.createElement('textarea'); ta.value = s; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); showToast(t('copied')); } catch (_) {} ta.remove(); }
+async function sha256hex(s) {
+  var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.prototype.map.call(new Uint8Array(buf), function (b) { return (b < 16 ? '0' : '') + b.toString(16); }).join('');
+}
+// ilova qismlarini koddan aniqlash (PLDN dagi qoida bilan bir xil)
+function detectTargets(code) {
+  var c = String(code || ''), out = [], m, re = /PLDN\s*\.\s*(?:ui\s*\.\s*(?:css|text|hide|button|image)|robot\s*\.\s*action)\s*\(\s*['"`]([A-Za-z]\d{2})['"`]/g;
+  while ((m = re.exec(c))) { var id = m[1].toUpperCase(); if (out.indexOf(id) < 0) out.push(id); }
+  if (/PLDN\s*\.\s*emotion\s*\.\s*(?:two|one)\s*\(/.test(c) && out.indexOf('G12') < 0) out.push('G12');
+  return out;
+}
+function slotsOf(code) {
+  var re = /PLDN\s*\.\s*(?:ui|robot)\s*\.\s*\w+\s*\(\s*['"`]@([A-Za-z][A-Za-z0-9_]{0,15})['"`]/g, m, out = [];
+  while ((m = re.exec(String(code || '')))) { var n = m[1].toLowerCase(); if (out.indexOf(n) < 0) out.push(n); }
+  return out;
+}
+
+/* ========== SERVER VA KIRISH ========== */
+var fbAuth = null;
+try { firebase.initializeApp(FIREBASE_CONFIG); fbAuth = firebase.auth(); } catch (e) { fbAuth = null; }
+var S = { user: null, lib: [], inst: {}, mine: [], parts: {}, cur: null, chip: 'all', myChip: 'all', editFid: null, editName: '', test: null };
+
+async function api(path, o) {
+  o = o || {};
+  if (!fbAuth) throw { code: 'network' };
+  var u = fbAuth.currentUser; if (!u) throw { code: 'auth' };
+  var tok = await u.getIdToken();
+  var ctl = new AbortController(), tm = setTimeout(function () { ctl.abort(); }, o.timeout || 20000), res;
+  try {
+    res = await fetch(API_BASE + path, { method: o.method || 'GET', headers: Object.assign({ Authorization: 'Bearer ' + tok }, o.body ? { 'Content-Type': 'application/json' } : {}), body: o.body ? JSON.stringify(o.body) : undefined, signal: ctl.signal });
+  } catch (e) { throw { code: 'network' }; } finally { clearTimeout(tm); }
+  var j = null; try { j = await res.json(); } catch (_) {}
+  if (!res.ok) throw { code: (j && j.error) || 'server', status: res.status, data: j || {} };
+  return j;
+}
+async function loadAll() {
+  try {
+    var r = await Promise.all([api('/lib'), api('/installed'), api('/mine'), api('/parts').catch(function () { return { parts: [] }; })]);
+    S.lib = r[0].funcs || []; S.inst = {}; (r[1].funcs || []).forEach(function (f) { S.inst[f.id] = f; });
+    S.mine = r[2].funcs || []; S.parts = {}; (r[3].parts || []).forEach(function (p) { S.parts[p.id] = p.name; });
+    hideState(); renderAll();
+  } catch (e) {
+    if (e.code === 'network') showState('offline'); else showState('error', errMsg(e));
+  }
+}
+async function reloadQuiet() { try { var r = await Promise.all([api('/lib'), api('/installed'), api('/mine')]); S.lib = r[0].funcs || []; S.inst = {}; (r[1].funcs || []).forEach(function (f) { S.inst[f.id] = f; }); S.mine = r[2].funcs || []; renderAll(); } catch (_) {} }
+
+async function doLogin() {
+  var u = $('login-user').value.trim().toLowerCase().replace(/^@/, ''), p = $('login-pass').value;
+  if (!fbAuth) { showToast(t('no_lib')); return; }
+  if (!u || !p) { showToast(t('fill_fields')); return; }
+  showState('loading');
+  try { await fbAuth.signInWithEmailAndPassword(u + '@pldn.app', p); }
+  catch (e) {
+    hideState();
+    var c = e && e.code || '';
+    showToast(c === 'auth/network-request-failed' ? errMsg({ code: 'network' }) : (c.indexOf('auth/too-many') === 0 ? errMsg({ code: 'rate_limit' }) : t('login_bad')));
+  }
+}
+if (!fbAuth) { hideState(); showState('error', t('no_lib')); }
+else fbAuth.onAuthStateChanged(function (user) {
+  S.user = user;
+  if (user) {
+    $('screen-login').classList.remove('active'); $('app').classList.remove('hidden');
+    var un = (user.email || '').replace('@pldn.app', '');
+    $('profile-username').value = un; loadProfile();
+    showState('loading'); loadAll();
+  } else {
+    hideState(); $('app').classList.add('hidden'); $('screen-login').classList.add('active');
+    S.lib = []; S.inst = {}; S.mine = [];
+  }
+});
+
+/* ========== NAVIGATSIYA ========== */
+var history_ = ['catalog'], cur = 'catalog';
+var MAIN = ['catalog', 'myfuncs', 'create', 'mycreated', 'profile'];
+var TITLES = { catalog: 'catalog', myfuncs: 'my_funcs', create: 'create', mycreated: 'my_created', profile: 'profile', detail: 'detail' };
+function setTitle() { var h = $('header-title'); if (h) h.textContent = t(TITLES[cur] || cur); }
+function navigate(screen, push) {
+  document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); });
+  var tg = $('screen-' + screen); if (tg) tg.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function (n) { n.classList.toggle('active', n.getAttribute('data-screen') === screen); });
+  if (push !== false && cur !== screen) history_.push(screen);
+  cur = screen; setTitle();
+  $('back-btn').classList.toggle('hidden', MAIN.indexOf(screen) >= 0);
+  if (screen === 'profile') loadProfile();
+  if (screen === 'create' && !S.editFid) restoreDraft();
+  window.scrollTo(0, 0);
+}
+function goBack() { history_.pop(); navigate(history_[history_.length - 1] || 'catalog', false); }
+try {
+  var CapApp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
+  if (CapApp && CapApp.addListener) CapApp.addListener('backButton', function () {
+    if (MAIN.indexOf(cur) < 0) goBack(); else if (cur !== 'catalog') navigate('catalog'); else if (CapApp.exitApp) CapApp.exitApp();
+  });
+} catch (_) {}
+
+/* ========== KATALOG ========== */
+function stateOf(id) { var i = S.inst[id]; return !i ? 'none' : (i.update ? 'update' : 'installed'); }
+function instBtn(f) {
+  var st = stateOf(f.id);
+  var lab = st === 'none' ? t('install') : (st === 'update' ? t('update') : t('installed'));
+  return '<button class="btn ' + (st === 'installed' ? 'btn-ghost' : 'btn-primary') + ' btn-sm" data-act="' + (st === 'installed' ? 'open' : 'install') + '" data-id="' + Number(f.id) + '">' + esc(lab) + '</button>';
+}
+function metaOf(f) { return esc(f.author || f.team) + ' · v' + esc(f.ver) + ' · ' + fmtN(f.installs) + ' ' + esc(t('installs')); }
+function cardHtml(f) {
+  return '<div class="func-card" data-act="open" data-id="' + Number(f.id) + '"><div class="func-icon">' + esc(f.icon) + '</div><div class="func-info"><div class="func-name">' + esc(f.name) + '</div><div class="func-meta">' + metaOf(f) + '</div></div>' + instBtn(f) + '</div>';
+}
+function renderCatalog() {
+  var q = $('search').value.trim().toLowerCase();
+  var list = S.lib.filter(function (f) { return !q || (f.name + ' ' + f.team + ' ' + (f.author || '')).toLowerCase().indexOf(q) >= 0; });
+  var byI = function (a, b) { return (b.installs || 0) - (a.installs || 0); }, byU = function (a, b) { return (b.updated || 0) - (a.updated || 0); };
+  var sections = !q && S.chip === 'all';
+  $('popular-sec').classList.toggle('hidden', !sections);
+  var shown;
+  if (sections) {
+    $('popular-scroll').innerHTML = list.slice().sort(byI).slice(0, 6).map(function (f) {
+      return '<div class="h-card" data-act="open" data-id="' + Number(f.id) + '"><div class="func-icon">' + esc(f.icon) + '</div><div class="func-name">' + esc(f.name) + '</div><div class="func-meta">' + esc(f.author || f.team) + ' · v' + esc(f.ver) + '</div>' + instBtn(f).replace('btn-sm', 'btn-sm" style="width:100%;') + '</div>';
+    }).join('');
+    shown = list.slice().sort(byU); $('new-title').textContent = t('new_funcs');
+  } else {
+    shown = list.slice().sort(S.chip === 'popular' ? byI : byU); $('new-title').textContent = t('results');
+  }
+  $('new-list').innerHTML = shown.map(cardHtml).join('');
+  $('catalog-empty').classList.toggle('hidden', list.length > 0);
+  $('new-title').classList.toggle('hidden', list.length === 0);
+}
+
+/* ========== TAFSILOT ========== */
+async function openDetail(id) {
+  navigate('detail');
+  $('detail-name').textContent = ''; $('detail-actions').innerHTML = '<div class="skeleton" style="margin:0;height:48px"></div>';
+  try {
+    var f = await api('/fn/' + Number(id)); S.cur = f; renderDetail();
+  } catch (e) { showToast(errMsg(e)); goBack(); }
+}
+function renderDetail() {
+  var f = S.cur; if (!f) return;
+  $('detail-icon').textContent = f.icon || '🧩'; $('detail-name').textContent = f.name;
+  $('detail-author').textContent = f.author || f.team;
+  $('detail-stats').innerHTML = '<span>v' + esc(f.ver || '') + '</span><span>·</span><span>' + fmtN(f.installs) + ' ' + esc(t('installs')) + '</span>' + (f.updated ? '<span>·</span><span>' + fmtDate(f.updated) + '</span>' : '');
+  var st = stateOf(f.id), a = '';
+  if (f.ver) {
+    a += st === 'none' ? '<button class="btn btn-success" data-act="install" data-id="' + f.id + '">' + esc(t('install')) + '</button>'
+      : st === 'update' ? '<button class="btn btn-primary" data-act="install" data-id="' + f.id + '">' + esc(t('update')) + ' → v' + esc(f.ver) + '</button>'
+      : '<button class="btn btn-ghost" disabled>' + esc(t('installed')) + '</button>';
+  }
+  if (st !== 'none') a += '<button class="btn btn-outline" style="color: var(--danger); border-color: var(--danger);" data-act="uninstall" data-id="' + f.id + '">' + esc(t('uninstall')) + '</button>';
+  $('detail-actions').innerHTML = a;
+  $('detail-desc').textContent = f.desc || '';
+  $('detail-versions').innerHTML = (f.versions || []).map(function (v) {
+    return '<div class="version-item"><div class="version-head"><strong>v' + esc(v.ver) + '</strong><span>' + fmtDate(v.decided) + '</span></div><div class="version-changes">' + esc(String(v.desc || '').slice(0, 300)) + '</div></div>';
+  }).join('');
+  $('detail-parts').innerHTML = (f.targets || []).length ? f.targets.map(function (id) { return '<span class="tag green">' + esc(id + (S.parts[id] ? ' · ' + S.parts[id] : '')) + '</span>'; }).join('') : '<span class="tag">' + esc(t('no_parts')) + '</span>';
+  $('detail-perms').innerHTML = (f.perms || []).length ? f.perms.map(function (p) { return '<span class="tag ' + (p === 'camera_mic' || p === 'location' ? 'red' : 'yellow') + '">' + esc(t('p_' + p) === 'p_' + p ? p : t('p_' + p)) + '</span>'; }).join('') : '<span class="tag">' + esc(t('no_perms')) + '</span>';
+  $('detail-code').textContent = f.code30 || '';
+}
+
+/* ========== O'RNATISH ========== */
+async function doInstall(id) {
+  try {
+    var r = await api('/install', { method: 'POST', body: { id: Number(id) } });
+    S.inst[id] = Object.assign({}, S.inst[id] || {}, { id: r.id, name: r.name, icon: r.icon, author: r.author, team: r.team, ver: r.ver, latest: r.ver, update: false, gone: false });
+    showToast(t('installed_toast')); renderAll(); if (cur === 'detail') renderDetail();
+  } catch (e) { showToast(errMsg(e)); renderAll(); }
+}
+async function doUninstall(id) {
+  if (!confirm(t('confirm_uninstall'))) return;
+  try { await api('/uninstall', { method: 'POST', body: { id: Number(id) } }); delete S.inst[id]; showToast(t('uninstalled_toast')); renderAll(); if (cur === 'detail') renderDetail(); }
+  catch (e) { showToast(errMsg(e)); }
+}
+async function findByCode() {
+  var c = $('code-input').value.trim().toLowerCase();
+  if (!/^[a-l]{30}$/.test(c)) { showToast(t('bad_code')); return; }
+  try { var f = await api('/bycode/' + c); $('code-input').value = ''; openDetail(f.id); } catch (e) { showToast(errMsg(e)); }
+}
+
+/* ========== MENING FUNKSIYALARIM ========== */
+function renderMyFuncs() {
+  var arr = Object.keys(S.inst).map(function (k) { return S.inst[k]; });
+  $('myfuncs-empty').classList.toggle('hidden', arr.length > 0);
+  $('myfuncs-list').innerHTML = arr.map(function (f) {
+    var meta = f.gone ? t('gone') : (f.update ? t('update_avail') + ': v' + f.latest : t('my_installed')) + ' · v' + f.ver;
+    return '<div class="my-func"><div style="position:relative;"><div class="func-icon">' + esc(f.icon) + '</div>' + (f.update ? '<div class="update-badge">1</div>' : '') + '</div>' +
+      '<div class="my-func-info"' + (f.gone ? '' : ' data-act="open" data-id="' + Number(f.id) + '"') + '><div class="func-name">' + esc(f.name) + '</div><div class="func-meta">' + esc(meta) + '</div></div>' +
+      '<div class="my-func-btns">' + (f.update ? '<button class="btn btn-primary btn-sm" data-act="install" data-id="' + Number(f.id) + '">' + esc(t('update')) + '</button>' : '') +
+      '<button class="btn btn-outline btn-sm" style="color:var(--danger);border-color:var(--danger)" data-act="uninstall" data-id="' + Number(f.id) + '">' + esc(t('uninstall')) + '</button></div></div>';
+  }).join('');
+}
+
+/* ========== YARATISH ========== */
+var DRAFT = 'pm_draft';
+function crField() { return { icon: $('cr-icon').value, team: $('cr-team').value, name: $('cr-name').value, ver: $('cr-ver').value, desc: $('cr-desc').value, code: $('cr-code').value, vis: radioVal('cr-vis'), place: radioVal('cr-place') }; }
+function radioVal(id) { var a = $(id).querySelector('.radio.active'); return a ? a.getAttribute('data-val') : ''; }
+function setRadio(id, val) { $(id).querySelectorAll('.radio').forEach(function (r) { r.classList.toggle('active', r.getAttribute('data-val') === val); }); }
+function saveDraft() { if (S.editFid) return; try { localStorage.setItem(DRAFT + '_' + S.user.uid, JSON.stringify(crField())); } catch (_) {} }
+function restoreDraft() {
+  if (S.restored) return; S.restored = true;
+  try {
+    var d = JSON.parse(localStorage.getItem(DRAFT + '_' + S.user.uid) || 'null'); if (!d) return;
+    $('cr-icon').value = d.icon || '🧩'; $('cr-team').value = d.team || ''; $('cr-name').value = d.name || ''; $('cr-ver').value = d.ver || '1'; $('cr-desc').value = d.desc || ''; $('cr-code').value = d.code || '';
+    setRadio('cr-vis', d.vis || 'public'); setRadio('cr-place', d.place || 'funcs'); updateCreateInfo();
+  } catch (_) {}
+}
+function updateCreateInfo() {
+  $('cr-icon-preview').textContent = $('cr-icon').value || '🧩';
+  var code = $('cr-code').value, tg = detectTargets(code), sl = slotsOf(code), s = '';
+  if (tg.length) s += t('targets_label') + tg.join(', ');
+  if (sl.length) s += (s ? '\n' : '') + t('slots_label') + sl.map(function (x) { return '@' + x; }).join(', ');
+  $('cr-targets').textContent = s; $('cr-targets').style.whiteSpace = 'pre-wrap';
+}
+function clearCreate() {
+  ['cr-team', 'cr-name', 'cr-desc', 'cr-code'].forEach(function (id) { $(id).value = ''; }); $('cr-ver').value = '1'; $('cr-icon').value = '🧩';
+  setRadio('cr-vis', 'public'); setRadio('cr-place', 'funcs'); updateCreateInfo();
+}
+function resetCreate() {
+  S.editFid = null; S.test = null; S.restored = false; $('cr-banner').classList.add('hidden');
+  $('cr-g-team').classList.remove('hidden'); $('cr-g-name').classList.remove('hidden'); $('cr-testinfo').classList.add('hidden');
+}
+function setTestInfo(cls, txt) { var el = $('cr-testinfo'); el.className = 'test-info ' + cls; el.textContent = txt; }
+// Mavjud funksiyaning yangi versiyasi / rad etilganini qayta yuborish
+async function startEdit(fid, ver, same) {
+  try {
+    var m = S.mine.filter(function (x) { return x.id === fid; })[0]; if (!m) return;
+    var r = await Promise.all([api('/fn/' + fid + '/code?ver=' + encodeURIComponent(ver)), api('/fn/' + fid)]);
+    var vd = (r[1].versions || []).filter(function (v) { return v.ver === ver; })[0];
+    resetCreate(); S.editFid = fid;
+    $('cr-banner').textContent = t('new_ver_banner') + m.name; $('cr-banner').classList.remove('hidden');
+    $('cr-g-team').classList.add('hidden'); $('cr-g-name').classList.add('hidden');
+    $('cr-icon').value = m.icon || '🧩'; $('cr-ver').value = same ? ver : ''; $('cr-desc').value = (vd && vd.desc) || ''; $('cr-code').value = r[0].code || '';
+    setRadio('cr-vis', m.vis || 'public'); setRadio('cr-place', m.place || 'funcs'); updateCreateInfo();
+    navigate('create'); setTestInfo('bad', t('test_need'));
+  } catch (e) { showToast(errMsg(e)); }
+}
+// Test Mode: kodni PLDN dagi kabi qum qutisida (sandbox) ishga tushiradi
+var BRIDGE = [
+  '(function(){var P=window.parent,pend={},n=0;function send(m){try{P.postMessage(m,"*")}catch(e){}}',
+  'function call(t,a){return new Promise(function(res){var id=++n;pend[id]=res;a=a||{};a.t=t;a.id=id;send(a);setTimeout(function(){if(pend[id]){delete pend[id];res(null)}},8000)})}',
+  'window.addEventListener("message",function(e){var d=e.data;if(d&&d.t==="res"&&pend[d.id]){pend[d.id](d.v);delete pend[d.id]}});',
+  'function err(m,l){send({t:"err",m:String(m).slice(0,300),l:l||0})}',
+  'window.addEventListener("error",function(e){err(e.message,e.lineno)});',
+  'window.addEventListener("unhandledrejection",function(e){err("Promise: "+(e.reason&&e.reason.message||e.reason))});',
+  'var ce=console.error;console.error=function(){err([].join.call(arguments," "));try{ce.apply(console,arguments)}catch(_){}};',
+  'window.PLDN=Object.freeze({version:2,dark:false,launch:"",toast:function(m){send({t:"toast",m:String(m).slice(0,200)})},close:function(){send({t:"close"})},',
+  'store:{get:function(k){return call("sg",{k:String(k)})},set:function(k,v){return call("ss",{k:String(k),v:String(v)})},del:function(k){return call("sd",{k:String(k)})}},',
+  'ui:Object.freeze({css:function(p,v){return call("ui",{op:"css",p:String(p),v:String(v)})},text:function(p,v){return call("ui",{op:"text",p:String(p),v:String(v)})},hide:function(p,b){return call("ui",{op:"hide",p:String(p),v:b!==false})},',
+  'button:function(p,o){o=o||{};return call("ui",{op:"button",p:String(p),v:{id:String(o.id||"main"),text:String(o.text||""),icon:String(o.icon||"")}})},reset:function(){return call("ui",{op:"reset"})},parts:function(){return call("ui",{op:"parts"})},image:function(p,v){return call("ui",{op:"image",p:String(p),v:String(v)})}}),',
+  'robot:Object.freeze({action:function(p){return call("ui",{op:"robotact",p:String(p)})}}),',
+  'emotion:Object.freeze({two:function(d){return call("ui",{op:"emo2",v:JSON.stringify(d||{})})},one:function(d){return call("ui",{op:"emo1",v:JSON.stringify(d||{})})}})});',
+  'send({t:"ready"});})();'
+].join('');
+var CSP = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; media-src data: blob:; font-src data:; connect-src 'none'; frame-src 'none'; object-src 'none'; worker-src blob:; base-uri 'none'; form-action 'none'";
+function buildDoc(code) {
+  var isHtml = /<\s*(?:!doctype|html|head|body|div|span|p|h[1-6]|button|canvas|svg|style|script|input|form|ul|ol|table|a|img|section|main|label|textarea|select)\b/i.test(code);
+  var pre = '<meta http-equiv="Content-Security-Policy" content="' + CSP + '"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0}body{background:#fff;color:#000;font-family:-apple-system,Roboto,sans-serif}</style><script>' + BRIDGE + '<\/script>';
+  var body = isHtml ? code : '<script>' + code + '<\/script>';
+  var m = body.match(/^\s*<!doctype[^>]*>/i);
+  return m ? m[0] + pre + body.slice(m[0].length) : pre + body;
+}
+var run = null;
+function runTest() {
+  var code = $('cr-code').value; if (!code.trim()) { showToast(t('no_code')); return; }
+  if (run) return;
+  var errs = [], mem = {}, t0 = Date.now();
+  var el = document.createElement('div'); el.id = 'testRun';
+  var bar = document.createElement('div'); bar.className = 'bar';
+  var title = document.createElement('b'); title.textContent = t('test_title');
+  var cnt = document.createElement('span'); cnt.textContent = t('errors_label') + ': 0';
+  var close = document.createElement('button'); close.className = 'btn btn-primary btn-sm'; close.textContent = t('close');
+  bar.appendChild(title); bar.appendChild(cnt); bar.appendChild(close);
+  var fr = document.createElement('iframe'); fr.setAttribute('sandbox', 'allow-scripts'); fr.srcdoc = buildDoc(code);
+  el.appendChild(bar); el.appendChild(fr); document.body.appendChild(el);
+  function reply(id, v) { try { fr.contentWindow.postMessage({ t: 'res', id: id, v: v }, '*'); } catch (_) {} }
+  function onMsg(e) {
+    if (e.source !== fr.contentWindow) return; var d = e.data || {};
+    if (d.t === 'err') { if (errs.length < 50) errs.push(String(d.m)); cnt.textContent = t('errors_label') + ': ' + errs.length; }
+    else if (d.t === 'toast') showToast(String(d.m));
+    else if (d.t === 'close') finish();
+    else if (d.t === 'sg') reply(d.id, mem[d.k] == null ? null : mem[d.k]);
+    else if (d.t === 'ss') { mem[d.k] = d.v; reply(d.id, true); }
+    else if (d.t === 'sd') { delete mem[d.k]; reply(d.id, true); }
+    else if (d.t === 'ui') reply(d.id, d.op === 'parts' ? Object.keys(S.parts) : true);
+  }
+  window.addEventListener('message', onMsg);
+  async function finish() {
+    if (!run) return; run = null; window.removeEventListener('message', onMsg); el.remove();
+    var ms = Date.now() - t0, hash = '';
+    try { hash = await sha256hex(code); } catch (_) {}
+    var ok = errs.length === 0 && ms >= 2000 && !!hash;
+    S.test = { ok: ok, ms: ms, errors: errs.length, hash: hash };
+    if (ok) setTestInfo('ok', t('test_ok') + ' (' + (ms / 1000).toFixed(1) + ' s)');
+    else setTestInfo('bad', errs.length ? t('test_errors') + '\n' + errs.slice(0, 4).join('\n') : t('test_short'));
+  }
+  run = { finish: finish }; close.addEventListener('click', finish);
+}
+async function submitFn() {
+  var f = crField(), code = f.code;
+  if (!code.trim()) { showToast(t('no_code')); return; }
+  if (!S.editFid) {
+    if (!RE_TEAM.test(f.team.trim())) { showToast(errMsg({ code: 'bad_team' })); return; }
+    if (!RE_NAME.test(f.name.replace(/\s+/g, ' ').trim())) { showToast(errMsg({ code: 'bad_name' })); return; }
+  }
+  if (!RE_VER.test(f.ver.trim())) { showToast(errMsg({ code: 'bad_ver' })); return; }
+  if (!f.desc.trim()) { showToast(errMsg({ code: 'bad_desc' })); return; }
+  var hash = await sha256hex(code);
+  if (!S.test || !S.test.ok || S.test.hash !== hash) { setTestInfo('bad', t('test_need')); showToast(t('test_need')); return; }
+  var body = { ver: f.ver.trim(), desc: f.desc, code: code, icon: (f.icon || '🧩').trim(), vis: f.vis, place: f.place, targets: detectTargets(code), test: { ok: true, ms: S.test.ms, errors: S.test.errors, hash: hash } };
+  if (S.editFid) body.fid = S.editFid; else { body.team = f.team.trim(); body.name = f.name.replace(/\s+/g, ' ').trim(); }
+  var btn = $('cr-send'); btn.disabled = true;
+  try {
+    await api('/submit', { method: 'POST', body: body, timeout: 60000 });
+    try { localStorage.removeItem(DRAFT + '_' + S.user.uid); } catch (_) {}
+    resetCreate(); clearCreate();
+    showToast(t('sent_ok')); await reloadQuiet(); navigate('mycreated');
+  } catch (e) {
+    var msg = errMsg(e); if (e.code === 'scan_block' && e.data && e.data.findings) msg += ' (' + e.data.findings.length + ')';
+    showToast(msg);
+  } finally { btn.disabled = false; }
+}
+
+/* ========== YARATGANLARIM ========== */
+function myItems() {
+  var out = [];
+  S.mine.forEach(function (f) { (f.versions || []).forEach(function (v) { out.push({ f: f, v: v }); }); });
+  return out.sort(function (a, b) { return (b.v.submitted || 0) - (a.v.submitted || 0); });
+}
+function renderMyCreated() {
+  var items = myItems().filter(function (x) {
+    var s = x.v.status; if (S.myChip === 'all') return true;
+    return S.myChip === 'rejected' ? (s === 'rejected' || s === 'returned') : s === S.myChip;
+  });
+  $('mycreated-empty').classList.toggle('hidden', myItems().length > 0);
+  $('mycreated-list').innerHTML = items.map(function (x) {
+    var f = x.f, v = x.v, s = v.status, cls = s === 'approved' ? 'approved' : (s === 'pending' ? 'pending' : 'rejected');
+    var h = '<div class="func-card" style="flex-direction: column; align-items: stretch;"><div style="display:flex; gap:12px; align-items:center;"><div class="func-icon">' + esc(f.icon) + '</div><div style="flex:1; min-width:0;"><div class="func-name">' + esc(f.name) + '</div><div class="func-meta">v' + esc(v.ver) + ' · ' + fmtDate(v.submitted) + ' ' + esc(t('sent_on')) + '</div></div><span class="status ' + cls + '"><span class="status-dot"></span>' + esc(t(s)) + '</span></div>';
+    if ((s === 'rejected' || s === 'returned') && v.reason) h += '<div class="reason"><strong style="color: var(--danger);">' + esc(t('reject_reason')) + ':</strong> ' + esc(v.reason) + '</div>';
+    h += '<div class="row-btns">';
+    var d = 'data-fid="' + Number(f.id) + '" data-ver="' + esc(v.ver) + '"';
+    if (s === 'rejected' || s === 'returned') h += '<button class="btn btn-primary btn-sm" data-act="resend" ' + d + '>' + esc(t('send_again')) + '</button><button class="btn btn-outline btn-sm" data-act="withdraw" ' + d + '>' + esc(t('withdraw')) + '</button>';
+    else if (s === 'pending') h += '<button class="btn btn-outline btn-sm" data-act="withdraw" ' + d + '>' + esc(t('withdraw')) + '</button>';
+    else if (s === 'approved') {
+      h += '<button class="btn btn-primary btn-sm" data-act="newver" ' + d + '>' + esc(t('new_version')) + '</button>';
+      if (f.code30) h += '<button class="btn btn-ghost btn-sm" data-act="copy" data-text="' + esc(f.code30) + '">' + esc(t('copy')) + '</button>';
+      h += '<button class="btn btn-outline btn-sm" style="color:var(--danger);border-color:var(--danger)" data-act="removefn" data-fid="' + Number(f.id) + '">' + esc(t('remove')) + '</button>';
+    }
+    return h + '</div></div>';
+  }).join('');
+}
+async function withdrawVer(fid, ver) {
+  if (!confirm(t('confirm_withdraw'))) return;
+  try { await api('/withdraw', { method: 'POST', body: { fid: fid, ver: ver } }); await reloadQuiet(); } catch (e) { showToast(errMsg(e)); }
+}
+async function removeFn(fid) {
+  if (!confirm(t('confirm_remove'))) return;
+  try { await api('/remove', { method: 'POST', body: { fid: fid } }); await reloadQuiet(); } catch (e) { showToast(errMsg(e)); }
+}
+
+/* ========== PROFIL ========== */
+function profKey() { return 'pm_profile_' + (S.user ? S.user.uid : ''); }
+function loadProfile() {
+  if (!S.user) return;
+  var p = {}; try { p = JSON.parse(localStorage.getItem(profKey()) || '{}') || {}; } catch (_) {}
+  $('profile-firstname').value = p.firstName || ''; $('profile-lastname').value = p.lastName || '';
+  var un = (S.user.email || '').replace('@pldn.app', '');
+  $('profile-username').value = un; $('profile-display-username').textContent = '@' + un;
+  $('profile-display-name').textContent = [p.firstName, p.lastName].filter(Boolean).join(' ') || (lang === 'ru' ? 'Пользователь' : 'Foydalanuvchi');
+  $('avatar-img').classList.toggle('hidden', !p.avatar); $('avatar-placeholder').classList.toggle('hidden', !!p.avatar);
+  if (p.avatar) $('avatar-img').src = p.avatar;
+  $('stat-installed').textContent = Object.keys(S.inst).length; $('stat-created').textContent = S.mine.length;
+  $('stat-updates').textContent = Object.keys(S.inst).filter(function (k) { return S.inst[k].update; }).length;
+}
+function saveProfile() {
+  var p = {}; try { p = JSON.parse(localStorage.getItem(profKey()) || '{}') || {}; } catch (_) {}
+  p.firstName = $('profile-firstname').value.trim(); p.lastName = $('profile-lastname').value.trim();
+  try { localStorage.setItem(profKey(), JSON.stringify(p)); } catch (_) {}
+  loadProfile(); showToast(t('profile_saved'));
+}
+function handleAvatar(ev) {
+  var file = ev.target.files[0]; if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('⚠️ 2MB'); return; }
+  var rd = new FileReader();
+  rd.onload = function (e) { var p = {}; try { p = JSON.parse(localStorage.getItem(profKey()) || '{}') || {}; } catch (_) {} p.avatar = e.target.result; try { localStorage.setItem(profKey(), JSON.stringify(p)); } catch (_) { showToast('⚠️'); } loadProfile(); };
+  rd.readAsDataURL(file);
+}
+
+/* ========== HAMMASINI CHIZISH VA HODISALAR ========== */
+function renderAll() { renderCatalog(); renderMyFuncs(); renderMyCreated(); loadProfile(); if (cur === 'detail' && S.cur) renderDetail(); }
+document.addEventListener('click', function (e) {
+  var chip = e.target.closest('[data-chip]');
+  if (chip) { S.chip = chip.getAttribute('data-chip'); document.querySelectorAll('#chips .chip').forEach(function (c) { c.classList.toggle('active', c === chip); }); renderCatalog(); return; }
+  var mc = e.target.closest('[data-mychip]');
+  if (mc) { S.myChip = mc.getAttribute('data-mychip'); document.querySelectorAll('#my-chips .chip').forEach(function (c) { c.classList.toggle('active', c === mc); }); renderMyCreated(); return; }
+  var b = e.target.closest('[data-act]'); if (!b) return;
+  var act = b.getAttribute('data-act'), id = Number(b.getAttribute('data-id')), fid = Number(b.getAttribute('data-fid')), ver = b.getAttribute('data-ver');
+  if (act === 'open') openDetail(id);
+  else if (act === 'install') { b.disabled = true; doInstall(id); }
+  else if (act === 'uninstall') doUninstall(id);
+  else if (act === 'nav') { if (b.getAttribute('data-screen') === 'create' && cur !== 'create' && S.editFid) { resetCreate(); clearCreate(); } navigate(b.getAttribute('data-screen')); }
+  else if (act === 'back') goBack();
+  else if (act === 'lang') { lang = lang === 'uz' ? 'ru' : 'uz'; localStorage.setItem('pm_lang', lang); applyLang(); renderAll(); }
+  else if (act === 'findcode') findByCode();
+  else if (act === 'copycode') { if (S.cur && S.cur.code30) copyText(S.cur.code30); }
+  else if (act === 'copy') copyText(b.getAttribute('data-text'));
+  else if (act === 'radio') { b.parentElement.querySelectorAll('.radio').forEach(function (r) { r.classList.remove('active'); }); b.classList.add('active'); saveDraft(); }
+  else if (act === 'test') runTest();
+  else if (act === 'submit') submitFn();
+  else if (act === 'resend') startEdit(fid, ver, true);
+  else if (act === 'newver') startEdit(fid, ver, false);
+  else if (act === 'withdraw') withdrawVer(fid, ver);
+  else if (act === 'removefn') removeFn(fid);
+  else if (act === 'avatar') $('avatar-input').click();
+  else if (act === 'saveprofile') saveProfile();
+  else if (act === 'soon') showToast(t('soon'));
+  else if (act === 'logout') { if (confirm(t('confirm_logout'))) fbAuth.signOut(); }
+  else if (act === 'retry') { if (!fbAuth) location.reload(); else { showState('loading'); loadAll(); } }
+});
+$('login-btn').addEventListener('click', doLogin);
+$('login-pass').addEventListener('keydown', function (e) { if (e.key === 'Enter') doLogin(); });
+$('search').addEventListener('input', renderCatalog);
+$('avatar-input').addEventListener('change', handleAvatar);
+['cr-icon', 'cr-team', 'cr-name', 'cr-ver', 'cr-desc', 'cr-code'].forEach(function (id) {
+  $(id).addEventListener('input', function () { if (id === 'cr-code') { S.test = null; $('cr-testinfo').classList.add('hidden'); } updateCreateInfo(); saveDraft(); });
+});
+window.addEventListener('online', function () { if (S.user && $('state-offline').classList.contains('active')) { showState('loading'); loadAll(); } });
+
+/* ========== BOSHLASH ========== */
+applyLang();
+</script>
+</body>
+</html>
