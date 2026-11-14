@@ -1,0 +1,12 @@
+{
+  "_file": "package.json | versiya: bozor-1.0 | satr: 12 | 14-noy-2026",
+  "name": "pldn-bozor",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/app": "^6.0.1",
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/core": "^6.1.2"
+  }
+}
