@@ -1,9 +1,11 @@
-# PLDN-FAYL: .github/workflows/build.yml | versiya: bozor-ci-1.0 | satr: 46 | 14-noy-2026
+# PLDN-FAYL: .github/workflows/build.yml | versiya: bozor-ci-1.1 | satr: 57 | 14-noy-2026
 name: Build PLDN Bozor APK
 on:
   push:
     branches: [main]
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,7 +42,16 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug
+      - name: APK nomi
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk pldn-bozor.apk
       - uses: actions/upload-artifact@v4
         with:
           name: PLDN-Bozor-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: pldn-bozor.apk
+      - name: Release (PLDN ichidan yuklash uchun)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: PLDN Bozor ${{ github.run_number }}
+          files: pldn-bozor.apk
+          make_latest: true
