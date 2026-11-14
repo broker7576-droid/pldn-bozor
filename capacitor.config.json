@@ -1,0 +1,6 @@
+{
+  "appId": "com.pldn.bozor",
+  "appName": "PLDN Bozor",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
